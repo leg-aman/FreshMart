@@ -26,7 +26,7 @@ const MarketPlaceSchema = new mongoose.Schema({
     },
     category:{
         type: String,
-        enum: ['Resturant','Shop','other']
+        enum: ['Restaurant','Shop','other']
     },
     ownerId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -35,7 +35,7 @@ const MarketPlaceSchema = new mongoose.Schema({
     },
     isActive: {
         type: Boolean,
-        default: false
+        default: true
     }
 },
     { timestamps: true }

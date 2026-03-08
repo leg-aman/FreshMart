@@ -1,28 +1,21 @@
 const express = require('express')
 const router = express.Router()
 
-// Get marketPlaces data
-router.get('/api/v1/marketPlaces', (req, res) => {
-  res.json(marketPlaces);
-});
+const {
+  createMarket,
+  getMarkets,
+  getMarketById,
+  updateMarket,
+  deleteMarket,
+} = require('../controllers/marketPlaceController')
 
-router.get('/api/v1/getMarketPlaces/:id', (req, res) => {
-    const marketPlaceId = parseInt(req.params.id, 10)
-    const marketPlace = marketPlaces.find(m => m.marketPlace_id === marketPlaceId)
+const authenticateUser = require('../middleware/authentication')
+const authorizeRoles = require('../middleware/authorize')
 
-    if (!marketPlace) {
-        return res.status(404).send('Market place not found!')
-    }
-
-    res.json(marketPlace)
-})
-
-router.post('/api/v1/marketPlaces', (req,res) => {
-    
-})
-
-router.delete('/api/v1/marketPlaces/:id', (req,res) => {
-    
-})
+router.get('/', authenticateUser, authorizeRoles('Vendor'), getMarkets)
+router.get('/:id', authenticateUser, authorizeRoles('Vendor'), getMarketById)
+router.post('/', authenticateUser, authorizeRoles('Vendor'), createMarket)
+router.put('/:id', authenticateUser, authorizeRoles('Vendor'), updateMarket)
+router.delete('/:id', authenticateUser, authorizeRoles('Vendor'), deleteMarket)
 
 module.exports = router
