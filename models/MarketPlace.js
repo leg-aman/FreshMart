@@ -8,7 +8,7 @@ const MarketPlaceSchema = new mongoose.Schema({
         required: [true, 'Please provide market place name.'],
         trim: true,
         maxlength: [50, 'name cannot be more than 50 characters'],
-        minlength: [1, 'name must be at least 3 characters']
+        minlength: [1, 'name must be at least 1 characters']
     },
     location: {
         type: String,
@@ -26,7 +26,10 @@ const MarketPlaceSchema = new mongoose.Schema({
     },
     category:{
         type: String,
-        enum: ['Restaurant','Shop','other']
+        enum: ['Restaurant','Shop','Other']
+    },
+    openingDate: {
+        type: Date,
     },
     ownerId: {
         type: mongoose.Schema.Types.ObjectId,

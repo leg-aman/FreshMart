@@ -65,10 +65,12 @@ const updateMarket = async (req, res) => {
 
 const deleteMarket = async (req, res) => {
     const market = await MarketPlace.findById(req.params.id)
-    if (!market) return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' })
+    if (!market) {
+      return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' })}
 
-    if (market.ownerId.toString() !== req.user.userId)
+    if (market.ownerId.toString() !== req.user.userId){
         return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })
+      }
 
     market.isActive = false
     await market.save()
