@@ -10,16 +10,18 @@ const errorHandlerMiddleware = require('./middleware/error-handler')
 
 const authRouter = require('./routes/auth')
 const marketPlaceRouter = require('./routes/marketPlaceRouter')
+const productRouter = require('./routes/productRouter')
 
 app.use(express.static('./public'))
 app.use(express.json())
 
 app.get('/', (req, res) => {
-  res.send('<h1>Welcome to MarketPlace</h1>')
+  res.send('<h1>Welcome to FreshMart</h1>')
 })
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/markets', marketPlaceRouter)
+app.use('/app/v1/products',productRouter)
 
 app.use(notFound)
 app.use(errorHandlerMiddleware)

@@ -1,0 +1,98 @@
+const Product = require('../models/Product')
+const MarketPlace = require('../models/MarketPlace')
+const { StatusCodes } = require('http-status-codes')
+
+const createProduct = async (req, res) => {
+    try {
+        const { name, category, dietTags, inStock, marketPlaceId } = req.body
+
+        const market = await MarketPlace.findById(marketPlaceId)
+
+        if (!market) {
+            return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Marketplace not found' })
+        }
+
+        if (market.ownerId.toString() !== req.user.userId) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })
+        }
+
+        const product = await Product.create({
+            name,
+            category,
+            dietTags,
+            inStock,
+            marketPlaceId
+        })
+
+        res.status(StatusCodes.CREATED).json({ product })
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ msg: error.message })
+    }
+}
+
+const getProducts = async (req, res) => {
+    const products = await Product.find().populate('marketPlaceId', 'marketName location')
+    res.status(StatusCodes.OK).json({ products })
+}
+
+const updateProduct = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id)
+
+        if (!product) {
+            return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Product not found' })
+        }
+
+        const market = await MarketPlace.findById(product.marketPlaceId)
+
+        if (!market) {
+            return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Marketplace not found' })
+        }
+
+        if (market.ownerId.toString() !== req.user.userId) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })
+        }
+
+        const { name, category, dietTags, inStock } = req.body
+
+        product.name = name || product.name
+        product.category = category || product.category
+        product.dietTags = dietTags || product.dietTags
+        product.inStock = inStock ?? product.inStock
+
+        await product.save()
+
+        res.status(StatusCodes.OK).json({ product })
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ msg: error.message })
+    }
+}
+
+const deleteProduct = async (req, res) => {
+    const product = await Product.findById(req.params.id)
+
+    if (!product) {
+        return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Product not found' })
+    }
+
+    const market = await MarketPlace.findById(product.marketPlaceId)
+
+    if (!market) {
+        return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Marketplace not found' })
+    }
+
+    if (market.ownerId.toString() !== req.user.userId) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })
+    }
+
+    await product.deleteOne()
+
+    res.status(StatusCodes.OK).json({ msg: 'Product deleted' })
+}
+
+module.exports = {
+    createProduct,
+    getProducts,
+    updateProduct,
+    deleteProduct
+}
