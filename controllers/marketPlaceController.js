@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes')
 
 const createMarket = async (req, res) => {
   try {
-    const { marketName, location, address, description, category } = req.body
+    const { marketName, location, address, description, category, openingDate } = req.body
     
     const market = await MarketPlace.create({
       marketName,
@@ -11,6 +11,7 @@ const createMarket = async (req, res) => {
       address,
       description,
       category,
+      openingDate,
       ownerId: req.user.userId
     })
 
