@@ -5,7 +5,8 @@ const {
     createProduct,
     getProducts,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    searchProducts
 } = require('../controllers/productController')
 
 const authenticateUser = require('../middleware/authentication')
@@ -15,5 +16,7 @@ router.get('/', authenticateUser ,getProducts)
 router.post('/', authenticateUser, authorizeRoles('Vendor'), createProduct)
 router.put('/:id', authenticateUser, authorizeRoles('Vendor'), updateProduct)
 router.delete('/:id', authenticateUser, authorizeRoles('Vendor'), deleteProduct)
+
+router.get('/search', searchProducts)
 
 module.exports = router

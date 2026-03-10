@@ -47,18 +47,19 @@ const getMarketById = async (req, res) => {
 
 const updateMarket = async (req, res) => {
     const market = await MarketPlace.findById(req.params.id)
-    if (!market) return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' })
+    if (!market){ return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' })}
 
-    if (market.ownerId.toString() !== req.user.userId)
-        return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })
+    if (market.ownerId.toString() !== req.user.userId){
+        return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })}
 
-    const { marketName, location, address, description, category } = req.body
+    const { marketName, location, address, description, category, openingDate } = req.body
 
     market.marketName = marketName || market.marketName
     market.location = location || market.location
     market.address = address || market.address
     market.description = description || market.description
     market.category = category || market.category
+    market.openingDate = openingDate || market.openingDate
 
     await market.save()
     res.status(StatusCodes.OK).json({ market })

@@ -31,7 +31,13 @@ const createProduct = async (req, res) => {
 }
 
 const getProducts = async (req, res) => {
-    const products = await Product.find().populate('marketPlaceId', 'marketName location')
+    const markets = await MarketPlace.find({ ownerId: req.user.userId }).select('_id')
+    const marketIds = markets.map((market) => market._id)
+
+    const products = await Product.find({
+        marketPlaceId: { $in: marketIds }
+    }).populate('marketPlaceId', 'marketName location')
+
     res.status(StatusCodes.OK).json({ products })
 }
 
@@ -90,9 +96,42 @@ const deleteProduct = async (req, res) => {
     res.status(StatusCodes.OK).json({ msg: 'Product deleted' })
 }
 
+const searchProducts = async (req, res) => {
+  try {
+    const { category, dietTag, name } = req.query
+
+    const queryObject = {}
+
+    // filter by category
+    if (category) {
+      queryObject.category = category
+    }
+
+    // filter by diet tag
+    if (dietTag) {
+      queryObject.dietTags = dietTag
+    }
+
+    // search by product name
+    if (name) {
+      queryObject.name = { $regex: name, $options: 'i' }
+    }
+
+    const products = await Product.find(queryObject).populate(
+      'marketPlaceId',
+      'marketName location'
+    )
+
+    res.status(200).json({ count: products.length, products })
+  } catch (error) {
+    res.status(500).json({ msg: 'Search failed' })
+  }
+}
+
 module.exports = {
     createProduct,
     getProducts,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    searchProducts
 }
