@@ -4,7 +4,7 @@ const { StatusCodes } = require('http-status-codes')
 const createMarket = async (req, res) => {
   try {
     const { marketName, location, address, description, category, openingDate } = req.body
-    
+
     const market = await MarketPlace.create({
       marketName,
       location,
@@ -22,19 +22,20 @@ const createMarket = async (req, res) => {
   }
 }
 
-const getMarkets = async(req,res) => {
-    const markets = await MarketPlace.find({ 
-        ownerId: req.user.userId,
-        isActive: true})
-    res.status(StatusCodes.OK).json({markets})
+const getMarkets = async (req, res) => {
+  const markets = await MarketPlace.find({
+    ownerId: req.user.userId,
+    isActive: true
+  })
+  res.status(StatusCodes.OK).json({ markets })
 }
 
 const getMarketById = async (req, res) => {
-    const market = await MarketPlace.findById(req.params.id).populate(
-        'ownerId',
-        'name email role'
-    )
-      if (!market) {
+  const market = await MarketPlace.findById(req.params.id).populate(
+    'ownerId',
+    'name email role'
+  )
+  if (!market) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' })
   }
 
@@ -46,43 +47,45 @@ const getMarketById = async (req, res) => {
 }
 
 const updateMarket = async (req, res) => {
-    const market = await MarketPlace.findById(req.params.id)
-    if (!market){ return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' })}
+  const market = await MarketPlace.findById(req.params.id)
+  if (!market) { return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' }) }
 
-    if (market.ownerId.toString() !== req.user.userId){
-        return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })}
+  if (market.ownerId.toString() !== req.user.userId) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })
+  }
 
-    const { marketName, location, address, description, category, openingDate } = req.body
+  const { marketName, location, address, description, category, openingDate } = req.body
 
-    market.marketName = marketName || market.marketName
-    market.location = location || market.location
-    market.address = address || market.address
-    market.description = description || market.description
-    market.category = category || market.category
-    market.openingDate = openingDate || market.openingDate
+  market.marketName = marketName || market.marketName
+  market.location = location || market.location
+  market.address = address || market.address
+  market.description = description || market.description
+  market.category = category || market.category
+  market.openingDate = openingDate || market.openingDate
 
-    await market.save()
-    res.status(StatusCodes.OK).json({ market })
+  await market.save()
+  res.status(StatusCodes.OK).json({ market })
 }
 
 const deleteMarket = async (req, res) => {
-    const market = await MarketPlace.findById(req.params.id)
-    if (!market) {
-      return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' })}
+  const market = await MarketPlace.findById(req.params.id)
+  if (!market) {
+    return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Market not found' })
+  }
 
-    if (market.ownerId.toString() !== req.user.userId){
-        return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })
-      }
+  if (market.ownerId.toString() !== req.user.userId) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: 'Not authorized' })
+  }
 
-    market.isActive = false
-    await market.save()
-    res.status(StatusCodes.OK).json({ msg: 'Market deleted' })
+  market.isActive = false
+  await market.save()
+  res.status(StatusCodes.OK).json({ msg: 'Market deleted' })
 }
 
 module.exports = {
-    createMarket,
-    getMarkets,
-    getMarketById,
-    updateMarket,
-    deleteMarket
+  createMarket,
+  getMarkets,
+  getMarketById,
+  updateMarket,
+  deleteMarket
 }

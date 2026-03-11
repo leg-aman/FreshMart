@@ -12,7 +12,7 @@ const {
 const authenticateUser = require('../middleware/authentication')
 const authorizeRoles = require('../middleware/authorize')
 
-router.get('/', authenticateUser ,getProducts)
+router.get('/', authenticateUser, authorizeRoles('Vendor' || 'Customer'), getProducts)
 router.post('/', authenticateUser, authorizeRoles('Vendor'), createProduct)
 router.put('/:id', authenticateUser, authorizeRoles('Vendor'), updateProduct)
 router.delete('/:id', authenticateUser, authorizeRoles('Vendor'), deleteProduct)

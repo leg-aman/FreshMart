@@ -97,35 +97,35 @@ const deleteProduct = async (req, res) => {
 }
 
 const searchProducts = async (req, res) => {
-  try {
-    const { category, dietTag, name } = req.query
+    try {
+        const { category, dietTag, name } = req.query
 
-    const queryObject = {}
+        const queryObject = {}
 
-    // filter by category
-    if (category) {
-      queryObject.category = category
+        // filter by category
+        if (category) {
+            queryObject.category = category
+        }
+
+        // filter by diet tag
+        if (dietTag) {
+            queryObject.dietTags = dietTag
+        }
+
+        // search by product name
+        if (name) {
+            queryObject.name = { $regex: name, $options: 'i' }
+        }
+
+        const products = await Product.find(queryObject).populate(
+            'marketPlaceId',
+            'marketName location'
+        )
+
+        res.status(200).json({ count: products.length, products })
+    } catch (error) {
+        res.status(500).json({ msg: 'Search failed' })
     }
-
-    // filter by diet tag
-    if (dietTag) {
-      queryObject.dietTags = dietTag
-    }
-
-    // search by product name
-    if (name) {
-      queryObject.name = { $regex: name, $options: 'i' }
-    }
-
-    const products = await Product.find(queryObject).populate(
-      'marketPlaceId',
-      'marketName location'
-    )
-
-    res.status(200).json({ count: products.length, products })
-  } catch (error) {
-    res.status(500).json({ msg: 'Search failed' })
-  }
 }
 
 module.exports = {

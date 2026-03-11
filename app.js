@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/markets', marketPlaceRouter)
-app.use('/app/v1/products',productRouter)
+app.use('/api/v1/products', productRouter)
 
 app.use(notFound)
 app.use(errorHandlerMiddleware)

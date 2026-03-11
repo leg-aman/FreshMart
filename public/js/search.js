@@ -2,6 +2,15 @@ const searchForm = document.getElementById('searchForm')
 const resultsContainer = document.getElementById('results')
 const resultCount = document.getElementById('resultCount')
 const resetBtn = document.getElementById('resetBtn')
+const logoutBtn = document.getElementById('logoutBtn')
+const token = localStorage.getItem('token')
+
+const welcomeName = document.getElementById('welcomeName')
+const userName = localStorage.getItem('name')
+
+if (welcomeName && userName) {
+  welcomeName.textContent = `Hi, ${userName}`
+}
 
 async function loadSearchResults(queryString = '') {
   try {
@@ -74,5 +83,18 @@ resetBtn.addEventListener('click', () => {
   document.getElementById('dietTag').value = ''
   loadSearchResults()
 })
+
+if (!token && logoutBtn) {
+  logoutBtn.style.display = 'none'
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('name')
+  localStorage.removeItem('role')
+  window.location.href = 'index.html'
+})
+}
 
 loadSearchResults()
