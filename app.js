@@ -4,7 +4,7 @@ const connectDB = require('./db/connect')
 require('dotenv').config()
 
 const helmet = require('helmet')
-const xss = require('xss-clean')
+// const xss = require('xss-clean')
 const rateLimit = require('express-rate-limit')
 
 const limiter = rateLimit({
@@ -27,7 +27,7 @@ app.use(express.static('./public'))
 app.use(express.json())
 
 app.use(helmet())
-app.use(xss())
+// app.use(xss())
 app.use(limiter)
 
 app.get('/', (req, res) => {
