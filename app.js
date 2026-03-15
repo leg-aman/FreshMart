@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const cookieParser = require('cookie-parser')
 const connectDB = require('./db/connect')
 require('dotenv').config()
 
@@ -25,6 +26,7 @@ const productRouter = require('./routes/productRouter')
 
 app.use(express.static('./public'))
 app.use(express.json())
+app.use(cookieParser())
 
 app.use(helmet())
 // app.use(xss())

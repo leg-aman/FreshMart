@@ -89,11 +89,20 @@ if (!token && logoutBtn) {
 }
 
 if (logoutBtn) {
-  logoutBtn.addEventListener('click', () => {
-  localStorage.removeItem('token')
+  logoutBtn.addEventListener('click', async () => {
+  try {
+    await fetch('/api/v1/auth/logout', {
+      method: 'POST',
+      credentials: 'same-origin',
+    })
+  } catch (error) {
+    console.log('Logout request failed')
+  }
+
   localStorage.removeItem('name')
   localStorage.removeItem('role')
-  window.location.href = 'index.html'
+  window.location.href = 'login.html'
+
 })
 }
 
