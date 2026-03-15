@@ -14,6 +14,13 @@ const register = async (req, res) => {
     const user = await User.create({ name, email, password, role })
     const token = user.createJWT()
 
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000,
+    })
+
     res.status(StatusCodes.CREATED).json({
         user: {
             name: user.name,
@@ -29,28 +36,45 @@ const login = async (req, res) => {
     if (!email || !password) {
         throw new BadRequestError('please provide email and password')
     }
+
     const user = await User.findOne({ email })
+
     if (!user) {
         throw new UnauthenticatedError('Invalid Credentials')
     }
+
     const isPasswordCorrect = await user.comparePassword(password)
+
     if (!isPasswordCorrect) {
-        throw new UnauthenticatedError('Invalid Credentilas')
+        throw new UnauthenticatedError('Invalid Credentials')
     }
-    // compare password
+
     const token = user.createJWT()
+
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000,
+    })
+
     res.status(StatusCodes.OK).json({
         user: {
             name: user.name,
-            role: user.role
+            role: user.role,
         },
-        token
+        msg: 'Login successful',
     })
 }
 
 const logout = (req, res) => {
     // for JWT stored on client-side (JSON), logout is done client-side by deleting the token
     // here we just send a message
+    res.cookie('token', '', {
+        httpOnly: true,
+        expires: new Date(0),
+    })
+
     res.status(200).json({ msg: 'Logged out successfully!' })
 }
 module.exports = { register, login, logout }

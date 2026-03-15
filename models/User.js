@@ -53,7 +53,7 @@ UserSchema.methods.createJWT = function () {
         { userId: this._id, name: this.name, role: this.role },
         process.env.JWT_SECRET,
         {
-            expiresIn: process.env.JWT_LIFETIME,
+            expiresIn: process.env.JWT_LIFETIME || '1d',
         }
     )
 }
