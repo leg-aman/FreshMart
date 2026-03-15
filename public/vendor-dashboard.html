@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Vendor Dashboard - FreshMart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:," />
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
+            <h1 class="text-2xl font-bold text-green-600">FreshMart Vendor</h1>
+
+            <div class="flex items-center gap-4">
+                <p id="welcomeName" class="text-gray-700 font-medium"></p>
+                <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-6 space-y-10">
+
+        <!-- CREATE MARKETPLACE -->
+        <section class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Create Marketplace</h2>
+
+            <form id="marketForm" class="grid md:grid-cols-2 gap-4">
+                <input id="marketName" type="text" placeholder="Marketplace Name" class="border p-3 rounded-lg"
+                    required />
+
+                <input id="location" type="text" placeholder="Location" class="border p-3 rounded-lg" required />
+
+                <input id="address" type="text" placeholder="Address" class="border p-3 rounded-lg md:col-span-2"
+                    required />
+
+                <textarea id="description" placeholder="Description"
+                    class="border p-3 rounded-lg md:col-span-2"></textarea>
+
+                <select id="category" class="border p-3 rounded-lg">
+                    <option value="">Select category</option>
+                    <option value="Restaurant">Restaurant</option>
+                    <option value="Shop">Shop</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <input id="openingDate" type="date" class="border p-3 rounded-lg" />
+
+                <button type="submit" class="md:col-span-2 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600">
+                    Create Marketplace
+                </button>
+            </form>
+
+            <p id="marketMessage" class="mt-4 text-sm"></p>
+        </section>
+
+        <!-- MY MARKETPLACES -->
+        <section class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">My Marketplaces</h2>
+            <div id="marketList" class="space-y-4"></div>
+        </section>
+
+        <!-- ADD PRODUCT -->
+        <section class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Add Product</h2>
+
+            <form id="productForm" class="grid md:grid-cols-2 gap-4">
+                <input id="productName" type="text" placeholder="Product Name" class="border p-3 rounded-lg" required />
+
+                <input id="productCategory" type="text" placeholder="Category" class="border p-3 rounded-lg" required />
+
+                <input id="dietTags" type="text" placeholder="Diet tags (comma separated)"
+                    class="border p-3 rounded-lg" />
+
+                <select id="marketPlaceId" class="border p-3 rounded-lg" required>
+                    <option value="">Select marketplace</option>
+                </select>
+
+                <select id="inStock" class="border p-3 rounded-lg">
+                    <option value="true">In Stock</option>
+                    <option value="false">Out of Stock</option>
+                </select>
+
+                <button type="submit" class="md:col-span-2 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600">
+                    Add Product
+                </button>
+            </form>
+
+            <p id="productMessage" class="mt-4 text-sm"></p>
+        </section>
+
+        <!-- MY PRODUCTS -->
+        <section class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">My Products</h2>
+            <div id="productList" class="space-y-4"></div>
+        </section>
+
+    </main>
+
+    <!-- EDIT PRODUCT MODAL -->
+    <div id="editProductModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-gray-800">Edit Product</h2>
+                <button id="closeModalBtn" class="text-gray-500 text-xl">&times;</button>
+            </div>
+
+            <form id="editProductForm" class="grid gap-4">
+                <input id="editProductName" type="text" placeholder="Product Name" class="border p-3 rounded-lg"
+                    required />
+
+                <input id="editProductCategory" type="text" placeholder="Category" class="border p-3 rounded-lg"
+                    required />
+
+                <input id="editDietTags" type="text" placeholder="Diet tags (comma separated)"
+                    class="border p-3 rounded-lg" />
+
+                <select id="editInStock" class="border p-3 rounded-lg">
+                    <option value="true">In Stock</option>
+                    <option value="false">Out of Stock</option>
+                </select>
+
+                <button type="submit" class="bg-green-500 text-white py-3 rounded-lg hover:bg-green-600">
+                    Update Product
+                </button>
+            </form>
+
+            <p id="editProductMessage" class="mt-4 text-sm"></p>
+        </div>
+    </div>
+
+    <!-- EDIT MARKETPLACE MODAL -->
+    <div id="editMarketModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-gray-800">Edit Marketplace</h2>
+                <button id="closeMarketModalBtn" class="text-gray-500 text-xl">&times;</button>
+            </div>
+
+            <form id="editMarketForm" class="grid gap-4">
+                <input id="editMarketName" type="text" placeholder="Marketplace Name" class="border p-3 rounded-lg"
+                    required />
+
+                <input id="editLocation" type="text" placeholder="Location" class="border p-3 rounded-lg" required />
+
+                <input id="editAddress" type="text" placeholder="Address" class="border p-3 rounded-lg" required />
+
+                <textarea id="editDescription" placeholder="Description" class="border p-3 rounded-lg"></textarea>
+
+                <select id="editCategory" class="border p-3 rounded-lg">
+                    <option value="">Select category</option>
+                    <option value="Restaurant">Restaurant</option>
+                    <option value="Shop">Shop</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <input id="editOpeningDate" type="date" class="border p-3 rounded-lg" />
+
+                <button type="submit" class="bg-green-500 text-white py-3 rounded-lg hover:bg-green-600">
+                    Update Marketplace
+                </button>
+            </form>
+
+            <p id="editMarketMessage" class="mt-4 text-sm"></p>
+        </div>
+    </div>
+
+    <script src="js/vendor-dashboard.js"></script>
+</body>
+
+</html>
